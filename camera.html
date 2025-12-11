@@ -4,157 +4,518 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>طلب تصريح لقطات الكاميرات</title>
-
+  
   <style>
+    :root {
+      --green: #0c8a3e;
+      --green-2: #0aa84c;
+      --bg: #f5f8fa;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --text: #1f2933;
+      --muted: #6b7280;
+      --shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      padding: 0;
-      background: #f3f3f3;
+      padding: 24px 12px 32px;
+      background: radial-gradient(circle at 20% 20%, #f7fbf8, #eef4f7 50%, #e8eef3);
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: flex-start;
       direction: rtl;
-      font-family: "Tajawal", sans-serif;
+      font-family: "Tajawal", system-ui, -apple-system, sans-serif;
+      color: var(--text);
     }
 
     .screen {
-      width: 820px;
-      min-height: 100vh;
-      background: white;
-      border-radius: 0 0 22px 22px;
-      overflow-x: hidden;
-      box-shadow: 0 0 12px rgba(0,0,0,0.12);
+      width: min(940px, 96vw);
+      background: var(--card);
+      border-radius: 26px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(12, 138, 62, 0.08);
     }
 
     .header {
-      background: #0c8a3e;
-      padding: 25px 0;
-      text-align: center;
+      background: linear-gradient(120deg, var(--green), var(--green-2));
+      padding: 30px 34px 38px;
       color: white;
-      font-size: 20px;
-      font-weight: 600;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 18% 22%, rgba(255,255,255,0.18), transparent 42%),
+                  radial-gradient(circle at 82% -5%, rgba(255,255,255,0.16), transparent 40%);
+      pointer-events: none;
+    }
+
+    .header-title {
+      font-size: 24px;
+      font-weight: 800;
+      margin: 0 0 6px;
+      letter-spacing: -0.4px;
+    }
+
+    .header-subtitle {
+      margin: 0;
+      opacity: 0.92;
+      font-weight: 500;
+      font-size: 15px;
+    }
+
+    .progress {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .progress-segment {
+      flex: 1;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.28);
+      border: 1px solid rgba(255,255,255,0.35);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      background: rgba(255,255,255,0.95);
+      border-radius: inherit;
+      transition: width 0.2s ease;
     }
 
     .content {
-      padding: 20px;
+      padding: 26px 26px 32px;
+      background: linear-gradient(180deg, #fff, #f9fbfc);
+    }
+
+    .section {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 18px 14px;
+      box-shadow: 0 1px 0 rgba(15, 23, 42, 0.02);
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      margin: 0 0 12px;
+      font-size: 16px;
+      font-weight: 800;
+      color: #16212a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(12, 138, 62, 0.1);
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 700;
     }
 
     .label {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
-      margin-top: 22px;
+      margin-top: 16px;
       margin-bottom: 8px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .optional {
-      color: #888;
+      color: var(--muted);
       font-size: 12px;
+      font-weight: 600;
     }
 
-    /* الحقول بعد تصغير الجهة اليسرى */
+    .field { position: relative; }
+
     .input,
     input[type="file"],
     input[type="date"],
-    input[type="time"] {
-      width: calc(100% - 18px);
-      height: 48px;
-      border-radius: 12px;
-      border: 1px solid #d9d9d9;
-      padding: 0 14px;
+    input[type="time"],
+    input[type="text"] {
+      width: 100%;
+      height: 50px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 0 16px;
       font-size: 15px;
-      background: #fafafa;
+      background: #f9fafb;
       outline: none;
-      margin-left: 2px;   /* ← التصغير من الجهة اليسار هنا */
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
     }
 
-    .input::placeholder {
-      color: #999;
+    .input:focus,
+    input[type="file"]:focus,
+    input[type="date"]:focus,
+    input[type="time"]:focus,
+    input[type="text"]:focus {
+      border-color: var(--green);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(12, 138, 62, 0.15);
     }
 
-    /* حل مشكلة Safari الخاصة بمحاذاة الوقت */
-    input[type="time"] {
-      -webkit-appearance: none;
-      appearance: none;
+    .input::placeholder,
+    input::placeholder {
+      color: #9aa5b1;
     }
 
-    input[type="time"]::-webkit-calendar-picker-indicator {
-      display: none;
-    }
+    input[type="time"] { -webkit-appearance: none; appearance: none; }
+    input[type="time"]::-webkit-calendar-picker-indicator { display: none; }
 
-    .date-input {
-      text-align: right;
-      direction: rtl;
-    }
+    .date-input { text-align: right; direction: rtl; }
 
     .time-row {
       display: flex;
       gap: 12px;
+      flex-wrap: wrap;
     }
 
     .time-field {
       flex: 1;
+      min-width: 210px;
     }
 
     .time-label {
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 700;
       margin-bottom: 6px;
-      color: #0c8a3e;
+      color: var(--green);
+    }
+
+    .hint {
+      font-size: 13px;
+      color: var(--muted);
+      margin: 6px 2px 0;
+    }
+
+    .info-card {
+      border: 1px dashed rgba(12, 138, 62, 0.35);
+      border-radius: var(--radius);
+      background: #f6fbf7;
+      padding: 12px 14px;
+      margin: 8px 2px 0;
+      display: flex;
+      gap: 10px;
+      color: #1f2c35;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .info-card strong { color: var(--green); }
+
+    .actions {
+      padding: 12px 2px 6px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
     .btn {
-      width: calc(100% - 22px);
-      height: 55px;
-      margin-top: 30px;
-      background: #0c8a3e;
+      flex: 1;
+      min-width: 260px;
+      height: 56px;
+      background: linear-gradient(120deg, var(--green), var(--green-2));
       color: white;
-      border-radius: 12px;
-      font-size: 18px;
-      font-weight: 600;
+      border-radius: 14px;
+      font-size: 17px;
+      font-weight: 800;
       border: none;
       cursor: pointer;
-      margin-left: 2px; /* زر الإرسال أيضًا يسار خفيف */
+      box-shadow: 0 10px 25px rgba(12, 138, 62, 0.25);
+      transition: none; /* إزالة حركة الهوفر */
+    }
+    .btn:hover { transform: none; box-shadow: 0 10px 25px rgba(12, 138, 62, 0.25); }
+    .btn:active { transform: none; box-shadow: 0 8px 18px rgba(12, 138, 62, 0.24); }
+
+    .ghost {
+      background: #e9f3ed;
+      color: var(--green);
+      border: 1px solid rgba(12, 138, 62, 0.3);
+      box-shadow: none;
+      font-weight: 700;
+      transition: none; /* إزالة هوفر زر إعادة التعبئة */
+    }
+    .ghost:hover { transform: none; box-shadow: none; background: #e9f3ed; }
+    .ghost:active { transform: none; box-shadow: none; background: #e9f3ed; }
+
+    .pill {
+      display: inline-block;
+      background: rgba(12, 138, 62, 0.1);
+      color: var(--green);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-inline-start: 6px;
     }
 
+    @media (max-width: 640px) {
+      .content { padding: 22px 18px 28px; }
+      .screen { border-radius: 18px; }
+      .header { padding: 26px 20px 32px; }
+      .header-title { font-size: 21px; }
+    }
   </style>
 </head>
 
 <body>
 <div class="screen">
 
-  <div class="header">طلب تصريح لقطات الكاميرات</div>
+  <div class="header">
+    <div class="header-title">طلب تصريح لقطات الكاميرات</div>
+    <p class="header-subtitle">أدخل بيانات الطلب بدقة لتسهيل معالجة المعاملة</p>
+    <div class="progress">
+      <div class="progress-segment"><div class="progress-fill" id="progress-1"></div></div>
+      <div class="progress-segment"><div class="progress-fill" id="progress-2"></div></div>
+    </div>
+  </div>
 
   <div class="content">
+    <div class="section">
+      <h3 class="section-title"><span>1</span>بيانات الطلب</h3>
 
-    <div class="label">إرفاق التقرير</div>
-    <input type="file">
-
-    <div class="label">العنوان الوطني</div>
-    <input type="text" class="input" placeholder="أدخل العنوان الوطني">
-
-    <div class="label">اسم الشارع <span class="optional">(اختياري)</span></div>
-    <input type="text" class="input" placeholder="اكتب اسم الشارع">
-
-    <div class="label">التاريخ</div>
-    <input type="date" class="date-input">
-
-    <div class="label">الوقت</div>
-    <div class="time-row">
-      <div class="time-field">
-        <div class="time-label">وقت البداية</div>
-        <input type="time">
+      <div class="label">إرفاق التقرير <span class="pill">PDF / صورة</span></div>
+      <div class="field">
+        <input type="file" id="file-input">
+        <div class="hint">أقصى حجم 10 م.ب — تأكد من وضوح المستند</div>
       </div>
-      <div class="time-field">
-        <div class="time-label">وقت النهاية</div>
-        <input type="time">
+
+      <div class="label">العنوان الوطني</div>
+      <div class="field">
+        <input type="text" id="national-address" class="input" placeholder="مثال: RARA3017 (8 أحرف/أرقام)">
+        <div class="hint">استخدم الرمز المكون من 8 أحرف/أرقام مثل RARA3017</div>
+      </div>
+
+      <div class="label">اسم الشارع <span class="optional">(اختياري)</span></div>
+      <div class="field">
+        <input type="text" id="street-name" class="input" placeholder="اكتب اسم الشارع">
       </div>
     </div>
 
-    <button class="btn">إرسال الطلب</button>
+    <div class="section">
+      <h3 class="section-title"><span>2</span>الوقت المطلوب</h3>
 
+      <div class="label">التاريخ</div>
+      <div class="field">
+        <input type="date" id="date-input" class="date-input input">
+      </div>
+
+      <div class="label">الوقت (حد أقصى 30 دقيقة بين البداية والنهاية)</div>
+      <div class="time-row">
+        <div class="time-field">
+          <div class="time-label">وقت البداية</div>
+          <input type="time" id="start-time" class="input">
+        </div>
+        <div class="time-field">
+          <div class="time-label">وقت النهاية</div>
+          <input type="time" id="end-time" class="input">
+        </div>
+      </div>
+
+      <div class="info-card">
+        <strong>تنبيه:</strong>
+        يجب ألا تتجاوز المدة 30 دقيقة. مثال: من 12:00 إلى 12:30 — هذا هو الإطار الزمني الذي سيُراجعه صاحب المنشأة لاستخراج المقطع المطلوب.
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn" id="submit-btn">إرسال الطلب</button>
+      <button class="btn ghost" type="button" id="reset-btn">إعادة تعبئة</button>
+    </div>
   </div>
-
 </div>
+
+<script>
+  (function() {
+    const endpoint = 'http://127.0.0.1:7242/ingest/9c418914-8923-4db0-bbbe-a8af215efd05';
+    const sessionId = 'debug-session';
+    const runId = 'absher-ui-restore';
+
+    function sendLog(hypothesisId, location, message, data) {
+      // #region agent log
+      fetch(endpoint, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          sessionId,
+          runId,
+          hypothesisId,
+          location,
+          message,
+          data,
+          timestamp: Date.now()
+        })
+      }).catch(() => {});
+      // #endregion
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      sendLog('H1', 'camera.html:DOMContentLoaded', 'ui_loaded', {
+        viewport: { w: window.innerWidth, h: window.innerHeight }
+      });
+    });
+
+    const submitBtn = document.getElementById('submit-btn');
+    const resetBtn = document.getElementById('reset-btn');
+    const fileInput = document.getElementById('file-input');
+    const address = document.getElementById('national-address');
+    const street = document.getElementById('street-name');
+    const dateInput = document.getElementById('date-input');
+    const startTime = document.getElementById('start-time');
+    const endTime = document.getElementById('end-time');
+    const progress1 = document.getElementById('progress-1');
+    const progress2 = document.getElementById('progress-2');
+
+    function markInvalid(el, invalid) {
+      el.style.borderColor = invalid ? '#b91c1c' : '';
+      el.style.boxShadow = invalid ? '0 0 0 3px rgba(185,28,28,0.15)' : '';
+    }
+
+    function parseMinutes(value) {
+      if (!value) return null;
+      const [h, m] = value.split(':').map(Number);
+      return h * 60 + m;
+    }
+
+    submitBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const payload = {
+        fileSelected: !!fileInput.files.length,
+        address: address.value.trim(),
+        street: street.value.trim(),
+        date: dateInput.value,
+        start: startTime.value,
+        end: endTime.value
+      };
+
+      const missing = Object.entries({ address: payload.address, date: payload.date, start: payload.start, end: payload.end })
+        .filter(([, v]) => !v)
+        .map(([k]) => k);
+
+      const startMin = parseMinutes(payload.start);
+      const endMin = parseMinutes(payload.end);
+      let rangeError = false;
+      if (!missing.length && startMin !== null && endMin !== null) {
+        const diff = endMin - startMin;
+        if (diff <= 0 || diff > 30) {
+          rangeError = true;
+        }
+      }
+
+      markInvalid(address, !payload.address);
+      markInvalid(dateInput, !payload.date);
+      markInvalid(startTime, !payload.start || rangeError);
+      markInvalid(endTime, !payload.end || rangeError);
+
+      updateProgress(payload, rangeError);
+
+      sendLog('H2', 'camera.html:submit', 'submit_clicked', payload);
+      sendLog('H3', 'camera.html:validation', 'validation_result', { missing, rangeError });
+      if (rangeError) {
+        sendLog('H5', 'camera.html:validation', 'time_range_error', { start: payload.start, end: payload.end });
+      }
+
+      if (missing.length || rangeError) {
+        submitBtn.textContent = rangeError ? 'المدة القصوى 30 دقيقة' : 'أكمل الحقول المطلوبة';
+        submitBtn.style.background = '#b91c1c';
+        submitBtn.style.boxShadow = '0 10px 25px rgba(185,28,28,0.25)';
+      } else {
+        submitBtn.textContent = 'تم تسجيل الطلب';
+        submitBtn.style.background = 'linear-gradient(120deg, #0b8a3e, #0aa84c)';
+        submitBtn.style.boxShadow = '0 10px 25px rgba(12,138,62,0.25)';
+      }
+    });
+
+    resetBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      fileInput.value = '';
+      address.value = '';
+      street.value = '';
+      dateInput.value = '';
+      startTime.value = '';
+      endTime.value = '';
+      markInvalid(address, false);
+      markInvalid(dateInput, false);
+      markInvalid(startTime, false);
+      markInvalid(endTime, false);
+      submitBtn.textContent = 'إرسال الطلب';
+      submitBtn.style.background = 'linear-gradient(120deg, #0c8a3e, #0aa84c)';
+      submitBtn.style.boxShadow = '0 10px 25px rgba(12,138,62,0.25)';
+      sendLog('H4', 'camera.html:reset', 'form_reset', {});
+      updateProgress({
+        fileSelected: false,
+        address: '',
+        street: '',
+        date: '',
+        start: '',
+        end: ''
+      }, false);
+    });
+
+    window.addEventListener('load', () => {
+      sendLog('H6', 'camera.html:load', 'page_loaded', {
+        viewport: { w: window.innerWidth, h: window.innerHeight }
+      });
+      updateProgress({
+        fileSelected: !!fileInput.files.length,
+        address: address.value.trim(),
+        street: street.value.trim(),
+        date: dateInput.value,
+        start: startTime.value,
+        end: endTime.value
+      }, false);
+    });
+
+    function updateProgress(payload, rangeError) {
+      if (!progress1 || !progress2) return;
+      const section1Complete = !!payload.address;
+      const startMin = parseMinutes(payload.start);
+      const endMin = parseMinutes(payload.end);
+      const section2Complete = !!payload.date && !!payload.start && !!payload.end && !rangeError && startMin !== null && endMin !== null && endMin - startMin > 0 && endMin - startMin <= 30;
+      progress1.style.width = section1Complete ? '100%' : '0%';
+      progress2.style.width = section2Complete ? '100%' : '0%';
+      sendLog('H7', 'camera.html:progress', 'progress_updated', {
+        section1Complete,
+        section2Complete
+      });
+    }
+
+    [fileInput, address, street, dateInput, startTime, endTime].forEach(el => {
+      el.addEventListener('input', () => {
+        updateProgress({
+          fileSelected: !!fileInput.files.length,
+          address: address.value.trim(),
+          street: street.value.trim(),
+          date: dateInput.value,
+          start: startTime.value,
+          end: endTime.value
+        }, false);
+      });
+    });
+  })();
+</script>
 </body>
 </html>
