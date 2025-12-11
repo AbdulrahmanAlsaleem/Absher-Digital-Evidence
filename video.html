@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>رفع فيديو الحادث - مسؤول التخزين</title>
+  
+  <style>
+    :root {
+      --green: #0c8a3e;
+      --green-2: #0aa84c;
+      --bg: #f5f8fa;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --text: #1f2933;
+      --muted: #6b7280;
+      --shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 24px 12px 32px;
+      background: radial-gradient(circle at 20% 20%, #f7fbf8, #eef4f7 50%, #e8eef3);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      direction: rtl;
+      font-family: "Tajawal", system-ui, -apple-system, sans-serif;
+      color: var(--text);
+    }
+
+    .screen {
+      width: min(940px, 96vw);
+      background: var(--card);
+      border-radius: 26px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(12, 138, 62, 0.08);
+    }
+
+    .header {
+      background: linear-gradient(120deg, var(--green), var(--green-2));
+      padding: 30px 34px 38px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 18% 22%, rgba(255,255,255,0.18), transparent 42%),
+                  radial-gradient(circle at 82% -5%, rgba(255,255,255,0.16), transparent 40%);
+      pointer-events: none;
+    }
+
+    .header-title {
+      font-size: 24px;
+      font-weight: 800;
+      margin: 0 0 6px;
+      letter-spacing: -0.4px;
+    }
+
+    .header-subtitle {
+      margin: 0;
+      opacity: 0.92;
+      font-weight: 500;
+      font-size: 15px;
+    }
+
+    .content {
+      padding: 26px 26px 32px;
+      background: linear-gradient(180deg, #fff, #f9fbfc);
+    }
+
+    .section {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 18px 14px;
+      box-shadow: 0 1px 0 rgba(15, 23, 42, 0.02);
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      margin: 0 0 12px;
+      font-size: 16px;
+      font-weight: 800;
+      color: #16212a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(12, 138, 62, 0.1);
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .label {
+      font-size: 15px;
+      font-weight: 700;
+      margin-top: 16px;
+      margin-bottom: 8px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .field { position: relative; }
+
+    .input,
+    input[type="file"],
+    input[type="date"],
+    input[type="time"],
+    input[type="text"] {
+      width: 100%;
+      height: 50px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 0 16px;
+      font-size: 15px;
+      background: #f9fafb;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .input:focus,
+    input[type="file"]:focus,
+    input[type="date"]:focus,
+    input[type="time"]:focus,
+    input[type="text"]:focus {
+      border-color: var(--green);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(12, 138, 62, 0.15);
+    }
+
+    .input:disabled {
+      background: #f3f4f6;
+      color: var(--muted);
+      cursor: not-allowed;
+    }
+
+    .input::placeholder,
+    input::placeholder {
+      color: #9aa5b1;
+    }
+
+    .time-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .time-field {
+      flex: 1;
+      min-width: 210px;
+    }
+
+    .time-label {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--green);
+    }
+
+    .hint {
+      font-size: 13px;
+      color: var(--muted);
+      margin: 6px 2px 0;
+    }
+
+    .actions {
+      padding: 12px 2px 6px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      flex: 1;
+      min-width: 260px;
+      height: 56px;
+      background: linear-gradient(120deg, var(--green), var(--green-2));
+      color: white;
+      border-radius: 14px;
+      font-size: 17px;
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(12, 138, 62, 0.25);
+      transition: none;
+    }
+    .btn:hover { transform: none; box-shadow: 0 10px 25px rgba(12, 138, 62, 0.25); }
+    .btn:active { transform: none; box-shadow: 0 8px 18px rgba(12, 138, 62, 0.24); }
+
+    .status {
+      margin-top: 16px;
+      padding: 14px 18px;
+      border-radius: var(--radius);
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .status.success {
+      background: #f6fbf7;
+      color: var(--green);
+      border: 1px solid rgba(12, 138, 62, 0.2);
+    }
+
+    .status.error {
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid rgba(185, 28, 28, 0.2);
+    }
+
+    .pill {
+      display: inline-block;
+      background: rgba(12, 138, 62, 0.1);
+      color: var(--green);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-inline-start: 6px;
+    }
+
+    @media (max-width: 640px) {
+      .content { padding: 22px 18px 28px; }
+      .screen { border-radius: 18px; }
+      .header { padding: 26px 20px 32px; }
+      .header-title { font-size: 21px; }
+    }
+  </style>
+</head>
+
+<body>
+<div class="screen">
+
+  <div class="header">
+    <div class="header-title">رفع فيديو الحادث</div>
+    <p class="header-subtitle">تأكد من استخدام رابط الرفع الذي وصلك من صاحب الطلب. يعرض أدناه تاريخ ووقت اللقطة المطلوبة، ثم ارفع الفيديو.</p>
+  </div>
+
+  <div class="content">
+    <form id="uploadForm">
+      <div class="section">
+        <h3 class="section-title"><span>1</span>معلومات اللقطة المطلوبة</h3>
+
+        <div class="label">التاريخ</div>
+        <div class="field">
+          <input id="incidentDateField" type="text" class="input" disabled placeholder="جاري التحميل..." />
+        </div>
+
+        <div class="label">الوقت</div>
+        <div class="time-row">
+          <div class="time-field">
+            <div class="time-label">وقت البداية</div>
+            <input id="incidentStartField" type="text" class="input" disabled placeholder="جاري التحميل..." />
+          </div>
+          <div class="time-field">
+            <div class="time-label">وقت النهاية</div>
+            <input id="incidentEndField" type="text" class="input" disabled placeholder="جاري التحميل..." />
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3 class="section-title"><span>2</span>رفع الفيديو</h3>
+
+        <div class="label">ملف الفيديو <span class="pill">MP4</span></div>
+        <div class="field">
+          <input id="video" name="video" type="file" class="input" required accept="video/mp4" />
+          <div class="hint">تأكد من أن الملف بصيغة MP4</div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="btn">رفع الفيديو</button>
+      </div>
+    </form>
+
+    <div id="uploadStatus" class="status" style="display:none;"></div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    const endpoint = 'http://127.0.0.1:7242/ingest/9c418914-8923-4db0-bbbe-a8af215efd05';
+    const sessionId = 'debug-session';
+    const runId = 'video-ui-theme';
+
+    function sendLog(hypothesisId, location, message, data) {
+      // #region agent log
+      fetch(endpoint, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          sessionId,
+          runId,
+          hypothesisId,
+          location,
+          message,
+          data,
+          timestamp: Date.now()
+        })
+      }).catch(() => {});
+      // #endregion
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      sendLog('H1', 'video.html:DOMContentLoaded', 'ui_loaded', {
+        viewport: { w: window.innerWidth, h: window.innerHeight }
+      });
+    });
+
+    window.addEventListener('load', () => {
+      sendLog('H2', 'video.html:load', 'page_loaded', {
+        viewport: { w: window.innerWidth, h: window.innerHeight }
+      });
+    });
+  })();
+</script>
+<script src="./admin.js"></script>
+</body>
+</html>
