@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>طلب تصريح لقطات الكاميرات</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f3f3f3;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      direction: rtl;
+      font-family: "Tajawal", sans-serif;
+    }
+
+    .screen {
+      width: 820px;
+      min-height: 100vh;
+      background: white;
+      border-radius: 0 0 22px 22px;
+      overflow-x: hidden;
+      box-shadow: 0 0 12px rgba(0,0,0,0.12);
+    }
+
+    .header {
+      background: #0c8a3e;
+      padding: 25px 0;
+      text-align: center;
+      color: white;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .content {
+      padding: 20px;
+    }
+
+    .label {
+      font-size: 16px;
+      font-weight: 700;
+      margin-top: 22px;
+      margin-bottom: 8px;
+    }
+
+    .optional {
+      color: #888;
+      font-size: 12px;
+    }
+
+    /* الحقول بعد تصغير الجهة اليسرى */
+    .input,
+    input[type="file"],
+    input[type="date"],
+    input[type="time"] {
+      width: calc(100% - 18px);
+      height: 48px;
+      border-radius: 12px;
+      border: 1px solid #d9d9d9;
+      padding: 0 14px;
+      font-size: 15px;
+      background: #fafafa;
+      outline: none;
+      margin-left: 2px;   /* ← التصغير من الجهة اليسار هنا */
+    }
+
+    .input::placeholder {
+      color: #999;
+    }
+
+    /* حل مشكلة Safari الخاصة بمحاذاة الوقت */
+    input[type="time"] {
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    input[type="time"]::-webkit-calendar-picker-indicator {
+      display: none;
+    }
+
+    .date-input {
+      text-align: right;
+      direction: rtl;
+    }
+
+    .time-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .time-field {
+      flex: 1;
+    }
+
+    .time-label {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #0c8a3e;
+    }
+
+    .btn {
+      width: calc(100% - 22px);
+      height: 55px;
+      margin-top: 30px;
+      background: #0c8a3e;
+      color: white;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      margin-left: 2px; /* زر الإرسال أيضًا يسار خفيف */
+    }
+
+  </style>
+</head>
+
+<body>
+<div class="screen">
+
+  <div class="header">طلب تصريح لقطات الكاميرات</div>
+
+  <div class="content">
+
+    <div class="label">إرفاق التقرير</div>
+    <input type="file">
+
+    <div class="label">العنوان الوطني</div>
+    <input type="text" class="input" placeholder="أدخل العنوان الوطني">
+
+    <div class="label">اسم الشارع <span class="optional">(اختياري)</span></div>
+    <input type="text" class="input" placeholder="اكتب اسم الشارع">
+
+    <div class="label">التاريخ</div>
+    <input type="date" class="date-input">
+
+    <div class="label">الوقت</div>
+    <div class="time-row">
+      <div class="time-field">
+        <div class="time-label">وقت البداية</div>
+        <input type="time">
+      </div>
+      <div class="time-field">
+        <div class="time-label">وقت النهاية</div>
+        <input type="time">
+      </div>
+    </div>
+
+    <button class="btn">إرسال الطلب</button>
+
+  </div>
+
+</div>
+</body>
+</html>
